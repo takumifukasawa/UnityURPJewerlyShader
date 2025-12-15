@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LitJewelryVertical_Skinning
+  m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
+  m_Parent: {fileID: 2100000, guid: a0208820142cc46bd855f1d4c4f7e597, type: 2}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ADSORPTION_TOTAL_DIST
+  - _MESH_SKINNING
+  - _REFLECT_FRESNEL_WEIGHT_ENABLED
+  - _SPECTROSCOPY_RGB
+  m_InvalidKeywords:
+  - _REFLECTFRESNEL_ENABLED
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _Mesh: 1
+    m_Colors: []
+  m_BuildTextureStacks: []
