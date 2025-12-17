@@ -7,18 +7,25 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MergedParticle 1
-  m_Shader: {fileID: -6465566751694194690, guid: 40c01c5c5865642028a99cb0db64068a,
-    type: 3}
+  m_Name: LitJewelryHorizontal_Static_TEST
+  m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 6
+  m_ValidKeywords:
+  - _ADSORPTION_TOTAL_DIST
+  - _MESH_STATIC
+  - _REFLECT_FRESNEL_WEIGHT_ENABLED
+  - _SPECTROSCOPY_RGB
+  m_InvalidKeywords:
+  - _ADSORPTIONDIST_TOTAL_DIST
+  - _ADSORPTION_EACHPATH
+  - _REFLECTFRESNEL_ENABLED
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -28,16 +35,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _BaseMap1:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BaseMap2:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeMap:
+        m_Texture: {fileID: 8900000, guid: 191eab80a44b5443e80962ff94cee6a4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -56,12 +59,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _EnvCubeMap:
+        m_Texture: {fileID: 8900000, guid: 05117fd1f218848b69b2174557aac558, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalCubeMap:
+        m_Texture: {fileID: 8900000, guid: 073b713f75bb348b9a905a1aa9236973, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -90,67 +101,56 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Adsorption: 1
+    - _AdsorptionB: 0.1
+    - _AdsorptionDist: 1
+    - _AdsorptionG: 0.1
+    - _AdsorptionR: 0.1
     - _AlphaClip: 0
-    - _AlphaMultiplier: 1
-    - _AlphaPower: 1
-    - _AlphaThresholdEdge: 0.05
-    - _AlphaThresholdWidth: 0.01
     - _AlphaToMask: 0
-    - _BaseColorMultiplier: 1
-    - _Blend: 0
+    - _Blend: 2
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
-    - _BlendRate1: 1
-    - _BlendRate2: 1
     - _BumpScale: 1
-    - _CameraFadingEnabled: 0
-    - _CameraFarFadeDistance: 2
-    - _CameraNearFadeDistance: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorMode: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DecalAngleFadeSupported: 1
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DistortionBlend: 0.5
-    - _DistortionEnabled: 0
-    - _DistortionStrength: 1
-    - _DistortionStrengthScaled: 0.1
-    - _DrawOrder: 0
     - _DstBlend: 0
-    - _DstBlendAlpha: 0
-    - _EmissionColorMultiplier: 0.6
+    - _DstBlendAlpha: 1
+    - _EachPathDistAdjust: 1.8
     - _EnvironmentReflections: 1
-    - _FlipbookBlending: 0
-    - _FlipbookMode: 0
-    - _FresnelMultiplier: 2
-    - _FresnelPower: 4.32
+    - _FresnelBlendRate: 1
+    - _FresnelPower: 0.54
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 0.888
-    - _Mode: 0
+    - _IOR: 2.67
+    - _IterateNum: 3.15
+    - _LightMultiplier_0: 0.38
+    - _LightMultiplier_1: 0.15
+    - _LightReflection_0: 0
+    - _LightReflection_1: 1
+    - _Mesh: 0
+    - _Metallic: 0
     - _OcclusionStrength: 1
+    - _OutlineDepthOffset: 0.01
+    - _OutlineWidth: 0.015
     - _Parallax: 0.005
-    - _QueueControl: 0
     - _QueueOffset: 0
-    - _RadialFadeEdge: 0.5
-    - _RadialFadeWidth: 0.1
-    - _RadialLengthScale1: 1
-    - _RadialLengthScale2: 1
-    - _RadialScale1: 1
-    - _RadialScale2: 1
     - _ReceiveShadows: 1
-    - _Smoothness: 0.732
+    - _ReflectFresnel: 1
+    - _Reflect_Fresnel_Weight: 1
+    - _SampleGI: 0
+    - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
-    - _SoftParticlesEnabled: 0
-    - _SoftParticlesFarFadeDistance: 1
-    - _SoftParticlesNearFadeDistance: 0
+    - _Spectroscopy: 1
+    - _SpectroscopyB: -0.01
+    - _SpectroscopyG: 0
+    - _SpectroscopyR: 0.01
+    - _Specular: 32
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -158,20 +158,19 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
-    - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
-    - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 0}
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RadialOffset1: {r: 0, g: 0, b: 0, a: 0}
-    - _RadialOffset2: {r: 0, g: 0, b: 0, a: 0}
-    - _RadialSpeed1: {r: 0, g: 0, b: 0, a: 0}
-    - _RadialSpeed2: {r: 0, g: 0, b: 0, a: 0}
-    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
+    - _Adsorption: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Center: {r: 0, g: 0, b: 0, a: 1}
+    - _CenterOffset: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EnvExposure: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 0.5019608}
+    - _LightColor_0: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor_1: {r: 1, g: 1, b: 1, a: 1}
+    - _LightDir_0: {r: 0.4, g: 1, b: -1, a: 1}
+    - _LightDir_1: {r: -0.4, g: -0.4, b: -1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpectroscopyB: {r: 0.05, g: 0.05, b: 0, a: 0}
-    - _SpectroscopyG: {r: 0, g: 0, b: 0, a: 0}
-    - _SpectroscopyR: {r: -0.05, g: -0.05, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5862362865090825081
 MonoBehaviour:

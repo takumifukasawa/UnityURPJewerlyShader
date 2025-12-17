@@ -41,7 +41,6 @@ Shader "CubemapBaker/Normal"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // return saturate(fixed4(i.normal, 1) * 0.5 + 0.5);
                 float2 xy = saturate(i.normal.xy * .5 + .5);
                 return fixed4(xy, 0., 0.);
             }

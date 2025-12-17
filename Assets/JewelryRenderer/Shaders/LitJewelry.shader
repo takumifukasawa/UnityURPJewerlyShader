@@ -3,14 +3,13 @@ Shader "Jewelry/LitJewelry"
     Properties
     {
         // CUSTOM_BEGIN
+        [NoScaleOffset]
         _NormalCubeMap ("NormalCubeMap", Cube) = "white" {}
         _CenterOffset ("CenterOffset", Vector) = (0, 0, 0, 1)
         _IOR("IOR", Float) = 1.45
-        _IterateNum("Iterate Num", Range(0, 8)) = 1
+        [Header(1 to 8)]
+        _IterateNum("Iterate Num", Int) = 1
         [Space(13)]
-        [KeywordEnum(Static, Skinning)] _Mesh ("Mesh Type", Float) = 0
-        [Space(13)]
-        [KeywordEnum(None, RGB)] _Spectroscopy ("Spectroscopy", Float) = 1
         _SpectroscopyR("SpectroscopyR", Range(-0.25, 0.25)) = -0.01
         _SpectroscopyG("SpectroscopyG", Range(-0.25, 0.25)) = 0
         _SpectroscopyB("SpectroscopyB", Range(-0.25, 0.25)) = 0.01

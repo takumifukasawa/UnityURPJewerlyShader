@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
 
-namespace akanevrc.JewelShader
+namespace JewelryRenderer
 {
 #if UNITY_EDITOR
     [ExecuteInEditMode]
@@ -24,6 +24,7 @@ namespace akanevrc.JewelShader
         public bool manualCentroid = false;
         public Vector3 centroid = Vector3.zero;
         public bool sRGBEnabled = false;
+        public TextureImporterFormat textureFormat = TextureImporterFormat.RGBA32;
         public int width = 256;
 
         // public void Bake(string cubemapPath, string materialPath)
@@ -218,7 +219,8 @@ namespace akanevrc.JewelShader
             {
                 maxTextureSize = 2048,
                 resizeAlgorithm = TextureResizeAlgorithm.Mitchell,
-                format = TextureImporterFormat.RGBA32
+                // format = TextureImporterFormat.RGBA32
+                format = textureFormat
             };
             importer.SetPlatformTextureSettings(platformSettings);
 

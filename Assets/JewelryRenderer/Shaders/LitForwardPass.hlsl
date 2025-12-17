@@ -11,14 +11,16 @@
 #define NORMAL_XY
 // #define RGB_SPECTROSCOPY
 
-#include "Assets/JewelryRenderer/Shaders/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+// for custom
+// #include "Assets/JewelryRenderer/Shaders/Lighting.hlsl"
 
 #define MAX_BONE_COUNT 56
 
 samplerCUBE _NormalCubeMap;
 float4 _CenterOffset;
 float _IOR;
-float _IterateNum;
+int _IterateNum;
 float _SpectroscopyR;
 float _SpectroscopyG;
 float _SpectroscopyB;
@@ -127,23 +129,8 @@ half4 CastRay(
 {
     isReflect = 0.;
 
-    float3 localInPos;
-    float3 localInDir;
-
-#if _MESH_SKINNING
-        // ローカル座標系に直す
-        // 完全な逆ではないことに注意
-        float4x4 invSkinningMatrix =
-            _InverseBoneMatrices[boneIndices.x] * boneWeights.x +
-            _InverseBoneMatrices[boneIndices.y] * boneWeights.y +
-            _InverseBoneMatrices[boneIndices.z] * boneWeights.z +
-            _InverseBoneMatrices[boneIndices.w] * boneWeights.w;
-        localInPos = mul(invSkinningMatrix, float4(inPos, 1.));
-        localInDir = normalize(mul(invSkinningMatrix, inDir).xyz);
-#else
-        localInPos = TransformWorldToObject(inPos);
-        localInDir = TransformWorldToObjectDir(inDir);
-#endif
+    float3 localInPos = TransformWorldToObject(inPos);
+    float3 localInDir = TransformWorldToObjectDir(inDir);
     
     float3 localCenter = TransformWorldToObject(center);
 
@@ -166,20 +153,10 @@ half4 CastRay(
     float3 localOutNormal = (cubeColor.xyz * 2. - 1.);
 #endif
 
-#if _MESH_SKINNING
-    float4x4 skinningMatrix =
-        _BoneMatrices[boneIndices.x] * boneWeights.x +
-        _BoneMatrices[boneIndices.y] * boneWeights.y +
-        _BoneMatrices[boneIndices.z] * boneWeights.z +
-        _BoneMatrices[boneIndices.w] * boneWeights.w;
-    outPos = inPos + normalize(mul(skinningMatrix, localOutNormal));
-    outNormal = normalize(mul(skinningMatrix, localOutNormal));
-#else
     // 射出位置
     outPos = inPos + TransformObjectToWorldDir(localInPosToLocalOutPos);
     // 射出方向(外側を向く)
     outNormal = TransformObjectToWorldNormal(localOutNormal);
-#endif
 
     float3 inwardFacingNormal = -outNormal;
 
@@ -219,16 +196,6 @@ half4 CastRay(
         _LightColor_1, _LightDir_1, _LightMultiplier_1
     ) * attenuation;
 
-    // for debug
-    // outDir = localOutNormal;
-    // outDir = outPos;
-    // // outDir = normal;
-    // outDir = inPos;
-    // outDir = localInPos;
-    // outDir = localOutDir;
-    // outDir = outPos;
-    // outDir = outNormal;
-
     return color;
 }
 
@@ -250,24 +217,24 @@ void CastRayIterate(
 {
     // initialize
     outColor = half4(0, 0, 0, 1);
-    outDir = normalize(inDir);
-    outPos = inPos;
     outNormal = normal;
+
+    float3 _inPos = inPos;
+    outPos = inPos;
+    float3 _inDir = refract(inDir, normal, ior + spectroscopy);
+    outDir = _inDir;
 
     float outWeight = 1.;
 
-    float3 _inPos = inPos;
-    float3 _inDir = inDir;
+    // 最初の進入時は100%屈折とみなす
+    // 全反射はCastRayIterateの呼び出し側で行うため
     float isReflect = 1.;
     half4 accColor = half4(0, 0, 0, 1);
 
-    // 最初の進入時は屈折
-    _inDir = refract(inDir, normal, ior + spectroscopy);
-    outDir = _inDir;
-
     float outAccDist = 0.;
 
-    for (int i = 0; i < _IterateNum; i++)
+    int iterateNum = min(_IterateNum, 8);
+    for (int i = 0; i < iterateNum; i++)
     {
         if (isReflect)
         {
@@ -545,85 +512,53 @@ half4 LitPassFragment(Varyings input) : SV_Target
     float3 outPos;
     float3 outNormal;
 
+    // rayの経路に応じた色を計算 ---
+
     float ior = 1. / _IOR;
 
+    // worldにおけるboundsの中心を計算. cubemapの読み取りに使う
+    float3 worldCenter = unity_ObjectToWorld._m03_m13_m23 + _CenterOffset.xyz;
+
+    half4 rayColor = half4(0, 0, 0, 1);
+    half4 rayColorR;
+    half4 rayColorG;
+    half4 rayColorB;
+    CastRayIterate(
+        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        worldCenter, ior, _SpectroscopyR, _AdsorptionR,
+        rayColorR, outDir, outPos, outNormal
+    );
+    CastRayIterate(
+        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        worldCenter, ior, _SpectroscopyG, _AdsorptionG,
+        rayColorG, outDir, outPos, outNormal
+    );
+    CastRayIterate(
+        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        worldCenter, ior, _SpectroscopyB, _AdsorptionB,
+        rayColorB, outDir, outPos, outNormal
+    );
+    rayColor.x = rayColorR.x;
+    rayColor.y = rayColorG.y;
+    rayColor.z = rayColorB.z;
+
+    rayColor.xyz = max(half3(0, 0, 0), rayColor.xyz);
+    
+    // 入射時のフレネルに応じてブレンド ---
+
+    // フレネルの計算と調整
     float fr = Fresnel(inDir, N, _IOR);
     fr = pow(fr, _FresnelPower);
     fr *= _FresnelBlendRate;
 
-    // 全反射
+    // 全反射した場合のベクトル
     float3 R = reflect(inDir, N);
 
     // フレネルをもとにprobeの色を計算
     half4 envColor = GetEnvColor(R, 0);
 
-    float3 center = unity_ObjectToWorld._m03_m13_m23 + _CenterOffset.xyz;
-
-#ifdef _SPECTROSCOPY_RGB
-    half4 outColorR;
-    half4 outColorG;
-    half4 outColorB;
-    CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
-        center, ior, _SpectroscopyR, _AdsorptionR,
-        outColorR, outDir, outPos, outNormal
-    );
-    CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
-        center, ior, _SpectroscopyG, _AdsorptionG,
-        outColorG, outDir, outPos, outNormal
-    );
-    CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
-        center, ior, _SpectroscopyB, _AdsorptionB,
-        outColorB, outDir, outPos, outNormal
-    );
-    outColor.x = outColorR.x;
-    outColor.y = outColorG.y;
-    outColor.z = outColorB.z;
-#else
-    float adsorption = (_AdsorptionR + _AdsorptionG + _AdsorptionB) * .33;
-    CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
-        center, _IOR, 0, adsorption,
-        outColor, outDir, outPos, outNormal
-    );
-#endif
-
-    outColor.xyz = max(half3(0, 0, 0), outColor.xyz);
-
-    // // 進入時のフレネルに応じてブレンド
-    outColor = half4(lerp(outColor.xyz, envColor.xyz, fr), 1.);
-
-    // // 全反射のspecularをブレンド
-    // // TODO: fresnelを考慮したほうがよい？
-    // outColor += ApplyLightSpecular(
-    //     inPos, N, E,
-    //     _Specular,
-    //     _LightColor_0, _LightDir_0, _LightMultiplier_0
-    // ) * _LightReflection_0 * fr;
-    // outColor += ApplyLightSpecular(
-    //     inPos, N, E,
-    //     _Specular,
-    //     _LightColor_1, _LightDir_1, _LightMultiplier_1
-    // ) * _LightReflection_1 * fr;
-
-    // for debug
-    // outColor = float4(outDir, 1.);
-    // outColor = float4(input.boneWeight.xyz, 1);
-    // outColor = float4(outDir, 1.);
-    // outColor = envColor;
-    // outColor.xyz = fr;
-    // outColor.xyz = envColor.xyz;
-    // outColor.xyz = R;
-
-    // color.xyz = dot(outDir, outDir);
-    // color.xyz = GetEnvColor(outDir, 0);
-    // // color.xyz = inDir;
-    // // color.xyz = outNormal;
-    // color.xyz = outDir;
-    // color = outColor;
-    // CUSTOM_END
+    // ブレンド
+    outColor = half4(lerp(rayColor.xyz, envColor.xyz, fr), 1.);
 
     return outColor;
 }

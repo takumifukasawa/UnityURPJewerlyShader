@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace akanevrc.JewelShader.Editor
+namespace JewelryRenderer
 {
     [CustomEditor(typeof(CubemapBaker))]
     public class CubemapBakerEditor : UnityEditor.Editor
@@ -39,8 +39,8 @@ namespace akanevrc.JewelShader.Editor
             {
                 return GetText
                 (
-                    "Use this GameObject to bake a Cubemap for akanevrc_JewelShader.",
-                    "このGameObjectは、茜式宝石シェーダー用キューブマップをベイクするために使用します。"
+                    "Use this GameObject to bake a Cubemap for Jewelry Shader.",
+                    "このGameObjectはキューブマップをベイクするために使用します。"
                 );
             }
 
@@ -67,6 +67,11 @@ namespace akanevrc.JewelShader.Editor
             public static string GetSRGBEnabledLabel()
             {
                 return GetText("sRGB Enabled", "sRGB有効");
+            }
+
+            public static string GetTextureFormatLabel()
+            {
+                return GetText("Texture Format", "テクスチャフォーマット");
             }
 
             public static string GetCentroidLabel()
@@ -133,6 +138,7 @@ namespace akanevrc.JewelShader.Editor
         private SerializedProperty cameraPrefab;
         private SerializedProperty meshPrefab;
         private SerializedProperty sRGBEnabled;
+        private SerializedProperty textureFormat;
         private SerializedProperty manualCentroid;
         private SerializedProperty centroid;
         private SerializedProperty width;
@@ -144,12 +150,13 @@ namespace akanevrc.JewelShader.Editor
 
         private void OnEnable()
         {
-            this.cameraPrefab   = this.serializedObject.FindProperty(nameof(this.cameraPrefab));
-            this.meshPrefab     = this.serializedObject.FindProperty(nameof(this.meshPrefab));
+            this.cameraPrefab = this.serializedObject.FindProperty(nameof(this.cameraPrefab));
+            this.meshPrefab = this.serializedObject.FindProperty(nameof(this.meshPrefab));
             this.manualCentroid = this.serializedObject.FindProperty(nameof(this.manualCentroid));
-            this.sRGBEnabled    = this.serializedObject.FindProperty(nameof(this.sRGBEnabled));
-            this.centroid       = this.serializedObject.FindProperty(nameof(this.centroid));
-            this.width          = this.serializedObject.FindProperty(nameof(this.width));
+            this.sRGBEnabled = this.serializedObject.FindProperty(nameof(this.sRGBEnabled));
+            this.textureFormat = this.serializedObject.FindProperty(nameof(this.textureFormat));
+            this.centroid = this.serializedObject.FindProperty(nameof(this.centroid));
+            this.width = this.serializedObject.FindProperty(nameof(this.width));
         }
 
         public override void OnInspectorGUI()
@@ -181,7 +188,11 @@ namespace akanevrc.JewelShader.Editor
             EditorGUILayout.LabelField(I18n.GetSRGBEnabledLabel());
             EditorGUILayout.PropertyField(this.sRGBEnabled, new GUIContent());
             EditorGUILayout.Space();
-            
+
+            EditorGUILayout.LabelField(I18n.GetTextureFormatLabel());
+            EditorGUILayout.PropertyField(this.textureFormat, new GUIContent());
+            EditorGUILayout.Space();
+
             EditorGUILayout.LabelField(I18n.GetWidthLabel());
             EditorGUILayout.PropertyField(this.width, new GUIContent());
             EditorGUILayout.Space();
@@ -194,6 +205,7 @@ namespace akanevrc.JewelShader.Editor
                 EditorGUILayout.PropertyField(this.cameraPrefab, new GUIContent());
                 EditorGUI.indentLevel--;
             }
+
             EditorGUILayout.Space();
 
             if (GUILayout.Button(I18n.GetBakeButtonLabel()))
@@ -235,7 +247,7 @@ namespace akanevrc.JewelShader.Editor
                         //     baker.Bake(cubemapPath, materialPath);
                         //     Debug.Log(I18n.GetBakeSucceededLog());
                         // }
-                        
+
                         baker.Bake(cubemapPath);
                         Debug.Log(I18n.GetBakeSucceededLog());
                     }
@@ -265,8 +277,8 @@ namespace akanevrc.JewelShader.Editor
         private bool Validate()
         {
             var cameraObj = this.cameraPrefab.objectReferenceValue;
-            var meshObj   = this.meshPrefab  .objectReferenceValue;
-            var widthVal  = this.width.intValue;
+            var meshObj = this.meshPrefab.objectReferenceValue;
+            var widthVal = this.width.intValue;
 
             if (cameraObj == null)
             {
