@@ -7,15 +7,10 @@
 #ifndef JEWELRY_FORWARD_LIT_PASS_INCLUDED
 #define JEWELRY_FORWARD_LIT_PASS_INCLUDED
 
-// config
-#define NORMAL_XY
-// #define RGB_SPECTROSCOPY
-
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 // for custom
 // #include "Assets/JewelryRenderer/Shaders/Lighting.hlsl"
 
-#define MAX_BONE_COUNT 56
 
 samplerCUBE _NormalCubeMap;
 float4 _CenterOffset;
@@ -37,10 +32,6 @@ float3 _LightDir_1;
 half4 _LightColor_1;
 float _LightMultiplier_1;
 float _LightReflection_1;
-// float4x4 _BindPoseMatrices[MAX_BONE_COUNT];
-// float4x4 _InverseWorldMatrices[MAX_BONE_COUNT];
-float4x4 _BoneMatrices[MAX_BONE_COUNT];
-float4x4 _InverseBoneMatrices[MAX_BONE_COUNT];
 float _FresnelPower;
 float _FresnelBlendRate;
 
@@ -114,8 +105,6 @@ half4 CastRay(
     float3 inPos,
     float3 inDir,
     float3 normal,
-    uint4 boneIndices,
-    float4 boneWeights,
     float3 center,
     float refractive,
     float adsorption,
@@ -143,15 +132,10 @@ half4 CastRay(
 
     float4 normalCubeColor = texCUBElod(_NormalCubeMap, float4(localOutDir.xyz, 0.));
 
-    // 法線の計算
-#ifdef NORMAL_XY
     // xyの2軸から法線を再計算
     float2 decodedNormalXY = normalCubeColor.xy * 2. - 1.;
     float decodedZ = sqrt(max(0., 1. - dot(decodedNormalXY, decodedNormalXY)));
     float3 localOutNormal = normalize(float3(decodedNormalXY, decodedZ));
-#else
-    float3 localOutNormal = (cubeColor.xyz * 2. - 1.);
-#endif
 
     // 射出位置
     outPos = inPos + TransformObjectToWorldDir(localInPosToLocalOutPos);
@@ -203,8 +187,6 @@ void CastRayIterate(
     float3 inPos,
     float3 inDir,
     float3 normal,
-    uint4 boneIndices,
-    float4 boneWeights,
     float3 center,
     float ior,
     float spectroscopy,
@@ -239,7 +221,7 @@ void CastRayIterate(
         if (isReflect)
         {
             accColor += CastRay(
-                _inPos, _inDir, normal, boneIndices, boneWeights,
+                _inPos, _inDir, normal,
                 center, 1. / (ior + spectroscopy), adsorption,
                 outDir, outPos, outNormal, outAccDist, outWeight, isReflect
             );
@@ -524,17 +506,17 @@ half4 LitPassFragment(Varyings input) : SV_Target
     half4 rayColorG;
     half4 rayColorB;
     CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        inPos, inDir, N,
         worldCenter, ior, _SpectroscopyR, _AdsorptionR,
         rayColorR, outDir, outPos, outNormal
     );
     CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        inPos, inDir, N,
         worldCenter, ior, _SpectroscopyG, _AdsorptionG,
         rayColorG, outDir, outPos, outNormal
     );
     CastRayIterate(
-        inPos, inDir, N, input.boneIndices, input.boneWeights,
+        inPos, inDir, N,
         worldCenter, ior, _SpectroscopyB, _AdsorptionB,
         rayColorB, outDir, outPos, outNormal
     );
