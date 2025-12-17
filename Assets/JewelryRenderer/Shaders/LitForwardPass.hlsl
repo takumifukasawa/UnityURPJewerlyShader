@@ -11,8 +11,7 @@
 // for custom
 // #include "Assets/JewelryRenderer/Shaders/Lighting.hlsl"
 
-
-samplerCUBE _NormalCubeMap;
+samplerCUBE _BakedCubeMap;
 float4 _CenterOffset;
 float _IOR;
 int _IterateNum;
@@ -105,7 +104,8 @@ half4 CastRay(
     float3 inPos,
     float3 inDir,
     float3 normal,
-    float3 center,
+    float3 worldCenter,
+    float3 localCenter,
     float refractive,
     float adsorption,
     out float3 outDir,
@@ -121,7 +121,7 @@ half4 CastRay(
     float3 localInPos = TransformWorldToObject(inPos);
     float3 localInDir = TransformWorldToObjectDir(inDir);
     
-    float3 localCenter = TransformWorldToObject(center);
+    // float3 localCenter = TransformWorldToObject(worldCenter);
 
     float3 localInPToLocalCenter = localCenter - localInPos;
 
@@ -130,10 +130,13 @@ half4 CastRay(
     float3 localCenterToLocalOutPos = localInPosToLocalOutPos - localInPToLocalCenter;
     float3 localOutDir = normalize(localCenterToLocalOutPos);
 
-    float4 normalCubeColor = texCUBElod(_NormalCubeMap, float4(localOutDir.xyz, 0.));
+    // xy: normal.xy
+    // z: none
+    // w: none
+    float4 cubeColor = texCUBElod(_BakedCubeMap, float4(localOutDir.xyz, 0.));
 
     // xyの2軸から法線を再計算
-    float2 decodedNormalXY = normalCubeColor.xy * 2. - 1.;
+    float2 decodedNormalXY = cubeColor.xy * 2. - 1.;
     float decodedZ = sqrt(max(0., 1. - dot(decodedNormalXY, decodedNormalXY)));
     float3 localOutNormal = normalize(float3(decodedNormalXY, decodedZ));
 
@@ -146,6 +149,7 @@ half4 CastRay(
 
     outDir = RefrafVector(inDir, inwardFacingNormal, refractive, isReflect);
     float fr = Fresnel(inDir, inwardFacingNormal, refractive);
+
 #if _REFLECT_FRESNEL_WEIGHT_ENABLED
     outWeight *= fr; // 反射する量をweightにかけて残す = フレネル分をweightにかける
     outWeight = saturate(outWeight);
@@ -187,7 +191,8 @@ void CastRayIterate(
     float3 inPos,
     float3 inDir,
     float3 normal,
-    float3 center,
+    float3 worldCenter,
+    float3 localCenter,
     float ior,
     float spectroscopy,
     float adsorption,
@@ -203,6 +208,7 @@ void CastRayIterate(
 
     float3 _inPos = inPos;
     outPos = inPos;
+    // 屈折
     float3 _inDir = refract(inDir, normal, ior + spectroscopy);
     outDir = _inDir;
 
@@ -222,7 +228,8 @@ void CastRayIterate(
         {
             accColor += CastRay(
                 _inPos, _inDir, normal,
-                center, 1. / (ior + spectroscopy), adsorption,
+                worldCenter, localCenter,
+                1. / (ior + spectroscopy), adsorption,
                 outDir, outPos, outNormal, outAccDist, outWeight, isReflect
             );
         }
@@ -254,10 +261,6 @@ struct Attributes
     float2 texcoord     : TEXCOORD0;
     float2 staticLightmapUV   : TEXCOORD1;
     float2 dynamicLightmapUV  : TEXCOORD2;
-    // CUSTOM_BEGIN
-    float4 boneWeights : BLENDWEIGHTS;
-    uint4 boneIndices : BLENDINDICES;
-    // CUSTOM_END
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -293,10 +296,6 @@ struct Varyings
 #ifdef DYNAMICLIGHTMAP_ON
     float2  dynamicLightmapUV : TEXCOORD9; // Dynamic lightmap UVs
 #endif
-
-    // CUSTOM
-    float4 boneWeights : TEXCOORD10;
-    uint4 boneIndices : TEXCOORD11;
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -429,19 +428,6 @@ Varyings LitPassVertex(Attributes input)
 
     output.positionCS = vertexInput.positionCS;
 
-    // CUSTOM
-    output.boneWeights = input.boneWeights;
-    output.boneIndices = input.boneIndices;
-    // float4x4 sm =
-    //     _BoneMatrices[input.boneIndices.x] * input.boneWeights.x +
-    //     _BoneMatrices[input.boneIndices.y] * input.boneWeights.y +
-    //     _BoneMatrices[input.boneIndices.z] * input.boneWeights.z +
-    //     _BoneMatrices[input.boneIndices.w] * input.boneWeights.w;
-    // float3 ws = mul(sm, input.positionOS);
-    // float cs  = TransformWorldToHClip(ws);
-    // output.positionWS = ws;
-    // output.positionCS = cs;
-
     return output;
 }
 
@@ -500,6 +486,8 @@ half4 LitPassFragment(Varyings input) : SV_Target
 
     // worldにおけるboundsの中心を計算. cubemapの読み取りに使う
     float3 worldCenter = unity_ObjectToWorld._m03_m13_m23 + _CenterOffset.xyz;
+    // boundsの中心のlocalでの位置
+    float3 localCenter = TransformWorldToObject(worldCenter);
 
     half4 rayColor = half4(0, 0, 0, 1);
     half4 rayColorR;
@@ -507,17 +495,20 @@ half4 LitPassFragment(Varyings input) : SV_Target
     half4 rayColorB;
     CastRayIterate(
         inPos, inDir, N,
-        worldCenter, ior, _SpectroscopyR, _AdsorptionR,
+        worldCenter, localCenter,
+        ior, _SpectroscopyR, _AdsorptionR,
         rayColorR, outDir, outPos, outNormal
     );
     CastRayIterate(
         inPos, inDir, N,
-        worldCenter, ior, _SpectroscopyG, _AdsorptionG,
+        worldCenter, localCenter,
+        ior, _SpectroscopyG, _AdsorptionG,
         rayColorG, outDir, outPos, outNormal
     );
     CastRayIterate(
         inPos, inDir, N,
-        worldCenter, ior, _SpectroscopyB, _AdsorptionB,
+        worldCenter, localCenter,
+        ior, _SpectroscopyB, _AdsorptionB,
         rayColorB, outDir, outPos, outNormal
     );
     rayColor.x = rayColorR.x;

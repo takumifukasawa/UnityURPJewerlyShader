@@ -4,7 +4,7 @@ Shader "Jewelry/LitJewelry"
     {
         // CUSTOM_BEGIN
         [NoScaleOffset]
-        _NormalCubeMap ("NormalCubeMap", Cube) = "white" {}
+        _BakedCubeMap ("BakedCubeMap", Cube) = "white" {}
         _CenterOffset ("CenterOffset", Vector) = (0, 0, 0, 1)
         _IOR("IOR", Float) = 1.45
         [Header(1 to 8)]
