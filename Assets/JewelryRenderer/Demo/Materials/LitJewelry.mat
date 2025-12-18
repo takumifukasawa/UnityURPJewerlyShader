@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LitJewelryHorizontal_TEST
+  m_Name: LitJewelry
   m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -135,8 +135,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IOR: 2.67
-    - _IterateNum: 4
+    - _IOR: 2.6
+    - _IterateNum: 4.4
     - _LightMultiplier_0: 0.38
     - _LightMultiplier_1: 0.15
     - _LightReflection_0: 0
@@ -157,9 +157,9 @@ Material:
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _Spectroscopy: 1
-    - _SpectroscopyB: -0.01
+    - _SpectroscopyB: -0.068
     - _SpectroscopyG: 0
-    - _SpectroscopyR: 0.01
+    - _SpectroscopyR: 0.053
     - _Specular: 32
     - _SpecularHighlights: 1
     - _SrcBlend: 1
