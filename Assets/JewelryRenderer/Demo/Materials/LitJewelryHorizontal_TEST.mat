@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LitJewelryHorizontal_Static_TEST
+  m_Name: LitJewelryHorizontal_TEST
   m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ADSORPTION_TOTAL_DIST
   - _MESH_STATIC
-  - _REFLECTION_DIST_APPROXIMATION
+  - _REFLECTION_DIST_BAKED
   - _REFLECT_FRESNEL_WEIGHT_ENABLED
   - _SPECTROSCOPY_RGB
   m_InvalidKeywords:
@@ -152,7 +152,7 @@ Material:
     - _RefDist: 0
     - _ReflectFresnel: 1
     - _Reflect_Fresnel_Weight: 1
-    - _Reflection_Dist: 0
+    - _Reflection_Dist: 1
     - _SampleGI: 0
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 0

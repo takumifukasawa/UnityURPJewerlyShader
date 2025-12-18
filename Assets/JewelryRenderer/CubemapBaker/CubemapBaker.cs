@@ -15,8 +15,7 @@ namespace JewelryRenderer
     public class CubemapBaker : MonoBehaviour
     {
 #pragma warning disable CS0414
-        private static readonly string bakerShaderName = "CubemapBaker/Normal";
-        // private static readonly string jewelShaderName = "akanevrc_JewelShader/Jewel";
+        private static readonly string bakerShaderName = "CubemapBaker/Default";
 #pragma warning restore CS0414
 
         public GameObject cameraPrefab = null;
@@ -26,6 +25,7 @@ namespace JewelryRenderer
         public bool sRGBEnabled = false;
         public TextureImporterFormat textureFormat = TextureImporterFormat.RGBA32;
         public int width = 256;
+        public float boundsScale = 1f;
 
         // public void Bake(string cubemapPath, string materialPath)
         public void Bake(string cubemapPath)
@@ -118,6 +118,7 @@ namespace JewelryRenderer
 
         private void InitBakerMaterial(Material material, Renderer renderer)
         {
+            material.SetFloat("_BoundsScale", boundsScale);
         }
 
         private void InitCubemap(Cubemap cubemap)

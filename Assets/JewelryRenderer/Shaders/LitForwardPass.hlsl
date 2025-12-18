@@ -145,13 +145,13 @@ half4 CastRay(
     float3 localOutNormal = normalize(float3(decodedNormalXY, decodedZ));
 
     // 射出位置
-#ifdef _REFLECTION_DIST_APPROXIMATION
-    // original
     outPos = inPos + TransformObjectToWorldDir(localInPosToLocalOutPos);
-#else
-    // baked dist
-    outPos = TransformObjectToWorldDir(cubeColor.z * cubeDir);
-#endif
+// #ifdef _REFLECTION_DIST_APPROXIMATION
+//     outPos = inPos + TransformObjectToWorldDir(localInPosToLocalOutPos);
+// #else
+//     // baked dist
+//     outPos = TransformObjectToWorldDir(cubeColor.z * cubeDir);
+// #endif
     // 射出方向(外側を向く)
     outNormal = TransformObjectToWorldNormal(localOutNormal);
 
@@ -161,10 +161,10 @@ half4 CastRay(
 
     float fr = Fresnel(localInDir, inwardFacingNormal, refractive);
 
-#if _REFLECT_FRESNEL_WEIGHT_ENABLED
+// #if _REFLECT_FRESNEL_WEIGHT_ENABLED
     outWeight *= fr; // 反射する量をweightにかけて残す = フレネル分をweightにかける
     outWeight = saturate(outWeight);
-#endif
+// #endif
 
     float3 reflDir = normalize(reflect(localInDir, inwardFacingNormal));
     float3 refrDir = normalize(refract(localInDir, inwardFacingNormal, refractive));
@@ -174,18 +174,27 @@ half4 CastRay(
 
     half4 envColor = lerp(refrEnvColor, reflEnvColor, fr);
 
+    // 入射位置から射出位置までの距離
+#ifdef _REFLECTION_DIST_APPROXIMATION
+    float3 bakedPos = TransformObjectToWorldDir(cubeColor.z * cubeDir);
+    float inToOutDist = length(bakedPos - inPos);
+#else
+    // 2. 純粋に近似的な射出位置への距離を算出する場合
     float inToOutDist = length(outPos - inPos);
+#endif
+
+    // トータルの距離に加算
     outAccDist += inToOutDist;
 
+    // 入射位置から射出位置の距離に応じて減衰
 #ifdef _ADSORPTION_TOTAL_DIST
     float attenuation = exp(-outAccDist * adsorption);
 #else
     float attenuation = exp(-inToOutDist * adsorption * _EachPathDistAdjust);
 #endif
-    
+
     half4 color = envColor * attenuation * outWeight;
 
-    // NOTE: 光源の計算にもweightかけるべき？
     color += ApplyLightDiffuse(
         outDir,
         _LightColor_0, _LightDir_0, _LightMultiplier_0
@@ -544,6 +553,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
     // ブレンド
     outColor = half4(lerp(rayColor.xyz, envColor.xyz, fr), 1.);
 
+    // for debug
     // float4 c = texCUBElod(_BakedCubeMap, float4(float3(0., -1., 0.), 0.));
     // outColor.xyz = abs(c.xyz);
     // outColor.w = 1.;

@@ -69,6 +69,11 @@ namespace JewelryRenderer
                 return GetText("sRGB Enabled", "sRGB有効");
             }
 
+            public static string GetBoundsScaleLabel()
+            {
+                return GetText("Bounds Scale (max size of edge)", "Boundsのサイズ（最大幅）");
+            }
+            
             public static string GetTextureFormatLabel()
             {
                 return GetText("Texture Format", "テクスチャフォーマット");
@@ -138,6 +143,7 @@ namespace JewelryRenderer
         private SerializedProperty cameraPrefab;
         private SerializedProperty meshPrefab;
         private SerializedProperty sRGBEnabled;
+        private SerializedProperty boundsScale;
         private SerializedProperty textureFormat;
         private SerializedProperty manualCentroid;
         private SerializedProperty centroid;
@@ -154,6 +160,7 @@ namespace JewelryRenderer
             this.meshPrefab = this.serializedObject.FindProperty(nameof(this.meshPrefab));
             this.manualCentroid = this.serializedObject.FindProperty(nameof(this.manualCentroid));
             this.sRGBEnabled = this.serializedObject.FindProperty(nameof(this.sRGBEnabled));
+            this.boundsScale = this.serializedObject.FindProperty(nameof(this.boundsScale));
             this.textureFormat = this.serializedObject.FindProperty(nameof(this.textureFormat));
             this.centroid = this.serializedObject.FindProperty(nameof(this.centroid));
             this.width = this.serializedObject.FindProperty(nameof(this.width));
@@ -187,6 +194,10 @@ namespace JewelryRenderer
 
             EditorGUILayout.LabelField(I18n.GetSRGBEnabledLabel());
             EditorGUILayout.PropertyField(this.sRGBEnabled, new GUIContent());
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.LabelField(I18n.GetBoundsScaleLabel());
+            EditorGUILayout.PropertyField(this.boundsScale, new GUIContent());
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField(I18n.GetTextureFormatLabel());

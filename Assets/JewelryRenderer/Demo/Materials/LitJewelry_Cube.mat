@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - _ADSORPTION_TOTAL_DIST
   - _MESH_STATIC
+  - _REFLECTION_DIST_APPROXIMATION
   - _REFLECT_FRESNEL_WEIGHT_ENABLED
   - _SPECTROSCOPY_RGB
   m_InvalidKeywords:
@@ -31,6 +32,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BakedCubeMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -141,6 +146,7 @@ Material:
     - _ReceiveShadows: 1
     - _ReflectFresnel: 1
     - _Reflect_Fresnel_Weight: 1
+    - _Reflection_Dist: 0
     - _SampleGI: 0
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 0

@@ -1,4 +1,4 @@
-Shader "CubemapBaker/Normal"
+Shader "CubemapBaker/Default"
 {
     Properties
     {
@@ -29,7 +29,6 @@ Shader "CubemapBaker/Normal"
                 float3 normal : NORMAL;
             };
 
-            float4 _Centroid;
             float _BoundsScale;
 
             v2f vert(appdata v)
@@ -48,7 +47,6 @@ Shader "CubemapBaker/Normal"
                 float z = length(i.vertex.xyz);
                 // w: boundsの逆数. boundsは均等な大きさに制限
                 float w = 1. / _BoundsScale;
-                w = 1.;
                 return fixed4(xy, z, w);
             }
             ENDCG
