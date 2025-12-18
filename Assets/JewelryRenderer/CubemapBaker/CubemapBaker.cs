@@ -210,7 +210,7 @@ namespace JewelryRenderer
                 mipMapsPreserveCoverage = false,
                 fadeOut = false,
                 wrapMode = TextureWrapMode.Clamp,
-                filterMode = FilterMode.Bilinear,
+                filterMode = FilterMode.Point,
                 aniso = 0
             };
             importer.SetTextureSettings(settings);

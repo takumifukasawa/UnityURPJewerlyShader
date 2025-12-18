@@ -10,6 +10,8 @@ Shader "Jewelry/LitJewelry"
         [Header(1 to 8)]
         _IterateNum("Iterate Num", Int) = 1
         [Space(13)]
+        [KeywordEnum(Approximation, Baked)] _Reflection_Dist ("Reflection_Dist", Float) = 0
+        [Space(13)]
         _SpectroscopyR("SpectroscopyR", Range(-0.25, 0.25)) = -0.01
         _SpectroscopyG("SpectroscopyG", Range(-0.25, 0.25)) = 0
         _SpectroscopyB("SpectroscopyB", Range(-0.25, 0.25)) = 0.01
@@ -187,6 +189,7 @@ Shader "Jewelry/LitJewelry"
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
             // CUSTOM
             #pragma shader_feature_local _SPECTROSCOPY_NONE _SPECTROSCOPY_RGB
+            #pragma shader_feature_local _REFLECTION_DIST_APPROXIMATION _REFLECTION_DIST_BAKED
             #pragma shader_feature_local _ADSORPTION_EACH_PATH _ADSORPTION_TOTAL_DIST
             #pragma shader_feature_local _MESH_SKINNING _MESH_STATIC
             #pragma shader_feature_local _REFLECT_FRESNEL_WEIGHT_ENABLED _REFLECT_FRESNEL_WEIGHT_DISABLED
@@ -545,6 +548,7 @@ Shader "Jewelry/LitJewelry"
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
             // CUSTOM
             #pragma shader_feature_local _SPECTROSCOPY_NONE _SPECTROSCOPY_RGB
+            #pragma shader_feature_local _REFLECTION_DIST_APPROXIMATION _REFLECTION_DIST_BAKED
             #pragma shader_feature_local _ADSORPTION_EACH_PATH _ADSORPTION_TOTAL_DIST
             #pragma shader_feature_local _MESH_SKINNING _MESH_STATIC
             #pragma shader_feature_local _REFLECT_FRESNEL_WEIGHT_ENABLED _REFLECT_FRESNEL_WEIGHT_DISABLED

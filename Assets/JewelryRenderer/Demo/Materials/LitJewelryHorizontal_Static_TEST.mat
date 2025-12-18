@@ -14,11 +14,14 @@ Material:
   m_ValidKeywords:
   - _ADSORPTION_TOTAL_DIST
   - _MESH_STATIC
+  - _REFLECTION_DIST_APPROXIMATION
   - _REFLECT_FRESNEL_WEIGHT_ENABLED
   - _SPECTROSCOPY_RGB
   m_InvalidKeywords:
   - _ADSORPTIONDIST_TOTAL_DIST
   - _ADSORPTION_EACHPATH
+  - _DIST_APPROXIMATION
+  - _REFDIST_APPR_DIST
   - _REFLECTFRESNEL_ENABLED
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -32,7 +35,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BakedCubeMap:
-        m_Texture: {fileID: 8900000, guid: 5d49d9bf6b4da46159bead14df863776, type: 3}
+        m_Texture: {fileID: 8900000, guid: 487640febbfe7444f8b8d3576daead36, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -122,6 +125,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _Dist: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 1
     - _EachPathDistAdjust: 1.8
@@ -132,7 +136,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _IOR: 2.67
-    - _IterateNum: 3.07
+    - _IterateNum: 4
     - _LightMultiplier_0: 0.38
     - _LightMultiplier_1: 0.15
     - _LightReflection_0: 0
@@ -145,8 +149,10 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RefDist: 0
     - _ReflectFresnel: 1
     - _Reflect_Fresnel_Weight: 1
+    - _Reflection_Dist: 0
     - _SampleGI: 0
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 0

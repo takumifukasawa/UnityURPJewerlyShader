@@ -30,6 +30,7 @@ Shader "CubemapBaker/Normal"
             };
 
             float4 _Centroid;
+            float _BoundsScale;
 
             v2f vert(appdata v)
             {
@@ -41,10 +42,14 @@ Shader "CubemapBaker/Normal"
 
             fixed4 frag(v2f i) : SV_Target
             {
+                // xy: 法線のxyのみpackする
                 float2 xy = saturate(i.normal.xy * .5 + .5);
-                return fixed4(xy, 0., 0.);
-                
-                // return fixed4(i.normal, 0.);
+                // z: 中心からの距離
+                float z = length(i.vertex.xyz);
+                // w: boundsの逆数. boundsは均等な大きさに制限
+                float w = 1. / _BoundsScale;
+                w = 1.;
+                return fixed4(xy, z, w);
             }
             ENDCG
         }

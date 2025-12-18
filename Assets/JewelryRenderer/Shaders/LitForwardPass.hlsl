@@ -125,29 +125,33 @@ half4 CastRay(
 
     float3 localInPToLocalCenter = localCenter - localInPos;
 
-    // - ローカル座標系での射出位置・方向を計算
-    // 入射地点と中心座標を元に反射位置を求める
+    // ローカル座標系での射出位置・方向を計算
+    // 入射地点 -> 近似の射出地点
     float3 localInPosToLocalOutPos = dot(localInDir, localInPToLocalCenter) * 2 * localInDir;
+    // 中心 -> 近似の射出地点
     float3 localCenterToLocalOutPos = localInPosToLocalOutPos - localInPToLocalCenter;
     // cubemap参照用のベクトル
-    float3 localOutDir = normalize(localCenterToLocalOutPos);
+    float3 cubeDir = normalize(localCenterToLocalOutPos);
 
-    // 1: xyの2軸から法線を再計算
+    // bakeされたcubemapから値を取得
     // xy: normal.xy packed
     // z: none
     // w: none
-    float4 cubeColor = texCUBElod(_BakedCubeMap, float4(localOutDir.xyz, 0.));
+    float4 cubeColor = texCUBElod(_BakedCubeMap, float4(cubeDir.xyz, 0.));
+
+    // xyにpackされたnormalから法線を再計算
     float2 decodedNormalXY = cubeColor.xy * 2. - 1.;
     float decodedZ = sqrt(max(0., 1. - dot(decodedNormalXY, decodedNormalXY)));
     float3 localOutNormal = normalize(float3(decodedNormalXY, decodedZ));
-    // 2: xyzからそのまま取り出す
-    // xyz: normal
-    // w: none
-    // float4 cubeColor = texCUBElod(_BakedCubeMap, float4(localOutDir.xyz, 0.));
-    // float3 localOutNormal = normalize(cubeColor.xyz);
 
     // 射出位置
+#ifdef _REFLECTION_DIST_APPROXIMATION
+    // original
     outPos = inPos + TransformObjectToWorldDir(localInPosToLocalOutPos);
+#else
+    // baked dist
+    outPos = TransformObjectToWorldDir(cubeColor.z * cubeDir);
+#endif
     // 射出方向(外側を向く)
     outNormal = TransformObjectToWorldNormal(localOutNormal);
 
@@ -155,7 +159,6 @@ half4 CastRay(
 
     outDir = RefrafVector(localInDir, inwardFacingNormal, refractive, isReflect);
 
-    // 
     float fr = Fresnel(localInDir, inwardFacingNormal, refractive);
 
 #if _REFLECT_FRESNEL_WEIGHT_ENABLED
