@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LitJewelryHorizontal_Static_TEST
+  m_Name: LitJewelryHorizontal_Sphere
   m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -32,7 +32,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BakedCubeMap:
-        m_Texture: {fileID: 8900000, guid: 5d49d9bf6b4da46159bead14df863776, type: 3}
+        m_Texture: {fileID: 8900000, guid: f25b709f32d4048a3b5faa00f6ef26c2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -132,7 +132,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _IOR: 2.67
-    - _IterateNum: 3.07
+    - _IterateNum: 4
     - _LightMultiplier_0: 0.38
     - _LightMultiplier_1: 0.15
     - _LightReflection_0: 0

@@ -43,6 +43,8 @@ Shader "CubemapBaker/Normal"
             {
                 float2 xy = saturate(i.normal.xy * .5 + .5);
                 return fixed4(xy, 0., 0.);
+                
+                // return fixed4(i.normal, 0.);
             }
             ENDCG
         }
