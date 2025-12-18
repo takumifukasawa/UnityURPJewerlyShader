@@ -229,7 +229,9 @@ void CastRayIterate(
     float3 _inPos = inPos;
     outPos = inPos;
     // 屈折
-    float3 _inDir = refract(inDir, normal, ior + spectroscopy);
+    float3 _inDir = refract(inDir, normal, 1. / (ior + spectroscopy));
+    // こっちの方が不正確だが見た目にわかりやすい
+    // float3 _inDir = refract(inDir, normal, (1. / ior) + spectroscopy);
     outDir = _inDir;
 
     float outWeight = 1.;
@@ -249,7 +251,8 @@ void CastRayIterate(
             accColor += CastRay(
                 _inPos, _inDir, normal,
                 worldCenter, localCenter,
-                1. / (ior + spectroscopy), adsorption,
+                (ior + spectroscopy),
+                adsorption,
                 outDir, outPos, outNormal, outAccDist, outWeight, isReflect
             );
         }
@@ -502,7 +505,8 @@ half4 LitPassFragment(Varyings input) : SV_Target
 
     // rayの経路に応じた色を計算 ---
 
-    float ior = 1. / _IOR;
+    // float ior = 1. / _IOR;
+    float ior = _IOR;
 
     // worldにおけるboundsの中心を計算. cubemapの読み取りに使う
     float3 worldCenter = unity_ObjectToWorld._m03_m13_m23 + _CenterOffset.xyz;
