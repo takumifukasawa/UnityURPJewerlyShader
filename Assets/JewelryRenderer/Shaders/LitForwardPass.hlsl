@@ -26,11 +26,9 @@ float _EachPathDistAdjust;
 float3 _LightDir_0;
 half4 _LightColor_0;
 float _LightMultiplier_0;
-float _LightReflection_0;
 float3 _LightDir_1;
 half4 _LightColor_1;
 float _LightMultiplier_1;
-float _LightReflection_1;
 float _FresnelPower;
 float _FresnelBlendRate;
 
@@ -135,10 +133,9 @@ half4 CastRay(
 
     // bakeされたcubemapから値を取得
     // xy: normal.xy packed
-    // z: none
-    // w: none
+    // z: distance
+    // w: 1. / boundsScale
     float4 cubeColor = texCUBElod(_BakedCubeMap, float4(cubeDir.xyz, 0.));
-
     // xyにpackされたnormalから法線を再計算
     float2 decodedNormalXY = cubeColor.xy * 2. - 1.;
     float decodedZ = sqrt(max(0., 1. - dot(decodedNormalXY, decodedNormalXY)));

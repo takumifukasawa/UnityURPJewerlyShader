@@ -44,7 +44,7 @@ Shader "CubemapBaker/Default"
                 // xy: 法線のxyのみpackする
                 float2 xy = saturate(i.normal.xy * .5 + .5);
                 // z: 中心からの距離
-                float z = length(i.vertex.xyz);
+                float z = length(i.vertex.xyz) / _BoundsScale;
                 // w: boundsの逆数. boundsは均等な大きさに制限
                 float w = 1. / _BoundsScale;
                 return fixed4(xy, z, w);

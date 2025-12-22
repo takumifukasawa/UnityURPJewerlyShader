@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LitJewelry
+  m_Name: LitJewelry_Ruby
   m_Shader: {fileID: 4800000, guid: 9a669ec1be303454285a87cb53bffdec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -30,7 +30,7 @@ Material:
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
-  m_LockedProperties: _LightMultiplier_0
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -109,9 +109,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _Adsorption: 1
-    - _AdsorptionB: 0.1
+    - _AdsorptionB: 3
     - _AdsorptionDist: 1
-    - _AdsorptionG: 0.1
+    - _AdsorptionG: 3
     - _AdsorptionR: 0.1
     - _AlphaClip: 0
     - _AlphaToMask: 0
@@ -136,7 +136,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _IOR: 2.48
-    - _IterateNum: 14.03
+    - _IterateNum: 8
     - _LightMultiplier_0: 0.38
     - _LightMultiplier_1: 0.15
     - _LightReflection_0: 0
@@ -175,8 +175,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EnvExposure: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 0.5019608}
-    - _LightColor_0: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
-    - _LightColor_1: {r: 0.9669811, g: 0.96852475, b: 1, a: 1}
+    - _LightColor_0: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor_1: {r: 1, g: 1, b: 1, a: 1}
     - _LightDir_0: {r: 0.4, g: 1, b: -1, a: 1}
     - _LightDir_1: {r: -0.4, g: -0.4, b: -1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

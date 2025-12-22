@@ -27,12 +27,10 @@ Shader "Jewelry/LitJewelry"
         [Space(13)]
         [HDR] _LightColor_0("LightColor_0", Color) = (1, 1, 1)
         _LightMultiplier_0("LightMultiplier_0", Range(0, 4)) = 1
-        _LightReflection_0("LightReflection_0", Range(0, 128)) = 1
         _LightDir_0("LightDir_0", Vector) = (1, 1, 1)
         [Space(13)]
         [HDR] _LightColor_1("LightColor_1", Color) = (1, 1, 1)
         _LightMultiplier_1("LightMultiplier_1", Range(0, 4)) = 1
-        _LightReflection_1("LightReflection_1", Range(0, 128)) = 1
         _LightDir_1("LightDir_1", Vector) = (1, 1, 1)
         [Space(13)]
         _FresnelPower("FresnelPower", Range(0.01, 8)) = 1
