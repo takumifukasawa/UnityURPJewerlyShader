@@ -15,6 +15,7 @@ samplerCUBE _BakedCubeMap;
 float4 _CenterOffset;
 float _IOR;
 int _IterateNum;
+float _EnvReflectionRate;
 float _SpectroscopyR;
 float _SpectroscopyG;
 float _SpectroscopyB;
@@ -549,7 +550,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
     float3 R = reflect(inDir, N);
 
     // フレネルをもとにprobeの色を計算
-    half4 envColor = GetEnvColor(R, 0);
+    half4 envColor = GetEnvColor(R, 0) * _EnvReflectionRate;
 
     // ブレンド
     outColor = half4(lerp(rayColor.xyz, envColor.xyz, fr), 1.);

@@ -12,6 +12,8 @@ Shader "Jewelry/LitJewelry"
         [Header(Reflection length approximation or baked)]
         [KeywordEnum(Approximation, Baked)] _Reflection_Dist ("Reflection_Dist", Float) = 0
         [Space(13)]
+        _EnvReflectionRate("EnvReflectionRate", Range(0, 1)) = 1
+        [Space(13)]
         _SpectroscopyR("SpectroscopyR", Range(-0.5, 0.5)) = -0.01
         _SpectroscopyG("SpectroscopyG", Range(-0.5, 0.5)) = 0
         _SpectroscopyB("SpectroscopyB", Range(-0.5, 0.5)) = 0.01

@@ -129,15 +129,16 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 1
     - _EachPathDistAdjust: 1.8
+    - _EnvReflectionRate: 1
     - _EnvironmentReflections: 1
     - _FresnelBlendRate: 1
     - _FresnelPower: 0.54
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IOR: 2.48
+    - _IOR: 1.76
     - _IterateNum: 8
-    - _LightMultiplier_0: 0.38
+    - _LightMultiplier_0: 0.84
     - _LightMultiplier_1: 0.15
     - _LightReflection_0: 0
     - _LightReflection_1: 1
